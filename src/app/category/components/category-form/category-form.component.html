@@ -1,0 +1,16 @@
+<form [formGroup]="categoryForm" class="input-group" (ngSubmit)="onSubmit()">
+
+  <select class="form-select" id="categorySelect" formControlName="category">
+    <option selected value="">Select a category</option>
+    <option *ngFor="let category of categories"
+            [value]="category.id"
+    >{{category.name}}</option>
+  </select>
+
+  <select class="form-select" id="difficultySelect" formControlName="difficulty">
+    <option selected value="">Select Difficulty</option>
+    <option *ngFor="let difficulty of difficulties" [value]="difficulty">{{difficulty | titlecase}}</option>
+  </select>
+
+  <button class="btn btn-outline-dark" type="submit" id="createBtn" [disabled]="invalidForm">Create</button>
+</form>

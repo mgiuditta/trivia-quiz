@@ -1,0 +1,9 @@
+<div class="d-flex flex-column gap-5 m-5">
+    <trivia-result-question *ngFor="let answeredQuestion of quizResults.userAnswers" [userAnswer]="answeredQuestion">
+
+    </trivia-result-question>
+    <trivia-result-score [scoreQuiz]="score">
+        You scored {{score}} of {{quizResults.userAnswers.length}}
+    </trivia-result-score>
+    <button type="button" class="btn bg-dark text-white" (click)="onClick()">Create a new quiz</button>
+</div>

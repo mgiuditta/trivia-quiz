@@ -1,0 +1,22 @@
+<div class="d-flex flex-column gap-5 m-5">
+
+  <trivia-spinner *ngIf="isLoading" class="d-flex justify-content-center" color="dark">
+    Quiz is loading
+  </trivia-spinner>
+
+  <trivia-quiz-question *ngFor="let question of questions"
+                        [question]="question"
+                        (selectAnswer)="checkAnswers()">
+
+  </trivia-quiz-question>
+  <button class="btn btn-outline-dark"
+          *ngIf="allQuestionsAnswered"
+          (click)="onQuizSubmit()">Submit Quiz
+  </button>
+
+
+  <trivia-alert color="danger" *ngIf="errorMessage && !isLoading">
+    {{errorMessage}}
+  </trivia-alert>
+</div>
+

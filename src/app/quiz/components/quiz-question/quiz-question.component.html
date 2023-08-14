@@ -1,0 +1,12 @@
+<div class="d-flex flex-column">
+  <p class="mb-3" [innerHTML]="question.question | htmlDecode"></p>
+  <div class="d-flex flex-wrap justify-content-start gap-3">
+    <button
+      class="btn btn-outline-success"
+      *ngFor="let answer of answers; let i = index"
+      [innerHTML]="answer | htmlDecode"
+      [triviaAnswerHighlight]="isSelectedAnswer(i)"
+      (click)="onAnswerClick(i)">
+    </button>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="d-flex flex-column">
+  <p class="mb-3" [innerHTML]="userAnswer.question.question | htmlDecode"></p>
+  <div class="d-flex flex-wrap justify-content-start gap-3">
+    <button
+      class="btn"
+      *ngFor="let answer of answersList"
+      [innerHTML]="answer | htmlDecode"
+      [triviaResultAnswer]="userAnswer"
+      [currentAnswer]="answer">
+    </button>
+  </div>
+</div>
+
