@@ -8,48 +8,59 @@ import {QuizInput} from '@models/quiz/quiz-input.model';
 import {mergeArrayWithItems} from "@core/utils/common-functions";
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class QuizService {
 
-  errorSubject: Subject<string> = new Subject<string>();
-  questionsListSubject: BehaviorSubject<Question[]> = new BehaviorSubject<Question[]>([]);
+    error$: Observable<string>;
+    questionsList$: Observable<Question[]>
 
-  private readonly DEFAULT_AMOUNT: number = 5;
-  private readonly QUESTION_URI: string = 'https://opentdb.com/api.php';
+    private errorSubject: Subject<string> = new Subject<string>();
+    private questionsListSubject: BehaviorSubject<Question[]> = new BehaviorSubject<Question[]>([]);
 
-  constructor(private http: HttpClient) {
-  }
+    private readonly DEFAULT_AMOUNT: number = 5;
+    private readonly QUESTION_URI: string = 'https://opentdb.com/api.php';
 
-  getQuiz(quizInput: QuizInput, amount: number = this.DEFAULT_AMOUNT): void {
-    const params: HttpParams = this.createRequestParams(amount, quizInput);
+    constructor(private http: HttpClient) {
+        this.error$ = this.errorSubject.asObservable();
+        this.questionsList$ = this.questionsListSubject.asObservable();
+    }
 
-    this.http
-      .get<QuestionsResponse>(this.QUESTION_URI, {params})
-      .pipe(
-        map((response: QuestionsResponse) => this.combineAnswersForQuestions(response.results)),
-        tap((questions: Question[]) => this.questionsListSubject.next(questions)),
-        catchError((error: HttpErrorResponse): Observable<Question[]> => {
-          this.errorSubject.next(error.statusText)
-          return of([]);
-        })
-      )
-      .subscribe();
-  }
+    getQuiz(quizInput: QuizInput, amount: number = this.DEFAULT_AMOUNT): void {
+        const params: HttpParams = this.createRequestParams(amount, quizInput);
 
-  private createRequestParams(amount: number, quizInput: QuizInput): HttpParams {
-    return new HttpParams()
-      .set('amount', amount.toString())
-      .set('category', quizInput.idCategory)
-      .set('difficulty', quizInput.difficulty);
-  }
+        this.http
+            .get<QuestionsResponse>(this.QUESTION_URI, {params})
+            .pipe(
+                map((response: QuestionsResponse) => this.combineAnswersForQuestions(response.results)),
+                tap((questions: Question[]) => this.questionsListSubject.next(questions)),
+                catchError((error: HttpErrorResponse): Observable<Question[]> => {
+                    this.errorSubject.next(error.statusText)
+                    return of([]);
+                })
+            )
+            .subscribe();
+    }
 
-  private combineAnswersForQuestions(questions: Question[]): Question[] {
-    return questions.map((question: Question) => this.combineAnswers(question));
-  }
+    resetQuizList(): void {
+        this.questionsListSubject.next([]);
+    }
 
-  private combineAnswers(question: Question): Question {
-    question.all_answers = mergeArrayWithItems(question.incorrect_answers,question.correct_answer)
-    return question;
-  }
+    private createRequestParams(amount: number, quizInput: QuizInput): HttpParams {
+        return new HttpParams()
+            .set('amount', amount.toString())
+            .set('category', quizInput.idCategory)
+            .set('difficulty', quizInput.difficulty);
+    }
+
+    private combineAnswersForQuestions(questions: Question[]): Question[] {
+        return questions.map((question: Question) => this.combineAnswers(question));
+    }
+
+    private combineAnswers(question: Question): Question {
+        question.all_answers = mergeArrayWithItems(question.incorrect_answers, question.correct_answer)
+        return question;
+    }
+
+
 }

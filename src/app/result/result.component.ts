@@ -28,7 +28,7 @@ export class ResultComponent implements OnInit {
     }
 
     resetQuiz(): void {
-        this.quizService.questionsListSubject.next([]); // reset category form
+        this.quizService.resetQuizList(); // reset category form
         this.resultService.resetQuizResult(); // reset quiz result
     }
 

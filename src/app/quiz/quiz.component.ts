@@ -71,7 +71,7 @@ export class QuizComponent implements OnInit, OnDestroy {
   }
 
   private subscribeQuizService(): void {
-    this.quizSubscription = this.quizService.questionsListSubject
+    this.quizSubscription = this.quizService.questionsList$
       .subscribe({
         next: (questions: Question[]): void => {
           this.questions = questions;
@@ -82,7 +82,7 @@ export class QuizComponent implements OnInit, OnDestroy {
   }
 
   private subscribeErrorService(): void {
-    this.errorSubscription = this.quizService.errorSubject
+    this.errorSubscription = this.quizService.error$
       .subscribe({
         next: (error: string): void => {
           this.errorMessage = error + " on loading quiz";
