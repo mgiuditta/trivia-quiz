@@ -22,7 +22,7 @@ export class CategoryComponent implements OnInit {
 
   private checkIfAQuizIsAlreadySubmitted(): void {
     if (this.resultService.isQuizSubmitted) {
-      this.quizService.questionsListSubject.next([]);
+      this.quizService.resetQuizList();
       this.resultService.isQuizSubmitted = false;
     }
   }
